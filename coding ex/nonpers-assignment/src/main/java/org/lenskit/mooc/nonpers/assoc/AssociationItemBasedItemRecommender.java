@@ -83,6 +83,8 @@ public class AssociationItemBasedItemRecommender extends AbstractItemBasedItemRe
         count++;
 //      }
     }
+    Collections.sort(results, Results.scoreOrder());
+    Collections.reverse(results);
     results = results.subList(0, n);
 
 

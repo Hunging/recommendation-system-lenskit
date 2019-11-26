@@ -71,13 +71,12 @@ public class BasicAssociationModelProvider implements Provider<AssociationModel>
       // loop over the 'y' items
       for (Long2ObjectMap.Entry<LongSortedSet> yEntry : itemUsers.long2ObjectEntrySet()) {
         long yId = yEntry.getLongKey();
-        
+
         // TODO Compute P(Y & X) / P(X) and store in itemScores
         double itemScore = 0;
         LongSortedSet yUsers = yEntry.getValue();
-        Set<Long> a = new HashSet<>(yUsers);
         int intersectSize = LongUtils.intersectSize(yUsers, xUsers);
-        itemScore = intersectSize *1.0 /  xUsers.size();
+        itemScore = intersectSize * 1.0 / xUsers.size();
         itemScores.put(yId, itemScore);
       }
 
