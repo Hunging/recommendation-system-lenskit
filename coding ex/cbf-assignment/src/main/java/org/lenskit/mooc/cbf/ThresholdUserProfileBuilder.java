@@ -37,6 +37,7 @@ public class ThresholdUserProfileBuilder implements UserProfileBuilder {
             if (r.getValue() >= RATING_THRESHOLD) {
 
                 // TODO Get this item's vector and add it to the user's profile
+                
             }
         }
 
