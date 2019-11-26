@@ -11,9 +11,12 @@ import org.lenskit.results.Results;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.lenskit.results.BasicResult;
 
 /**
  * @author <a href="http://www.grouplens.org">GroupLens Research</a>
@@ -72,13 +75,37 @@ public class TFIDFItemScorer extends AbstractItemScorer {
       // TODO Compute the cosine of this item and the user's profile, store it in the output list
       // TODO And remove this exception to say you've implemented it
       // If the denominator of the cosine similarity is 0, skip the item
-      throw new UnsupportedOperationException("stub implementation");
+//      throw new UnsupportedOperationException("stub implementation");
+//      Collection<Double> userValue = userVector.values();
+//      Double[] userListValue = userValue.toArray(new Double[userValue.size()]);
+//
+//      Collection<Double> itemValue = iv.values();
+//      Double[] itemListValue = itemValue.toArray(new Double[itemValue.size()]);
+//      System.out.println("itemValue: " + itemValue.size() + " userValue: " + userValue.size());
+//      Double result = cosineSimilarity(userListValue, itemListValue);
+      Double numerator = 0.0;
+      Double denominator = 0.0;
+      for (Map.Entry<String, Double> e : iv.entrySet()) {
+        String key = e.getKey();
+        Double value = e.getValue();
+        Double uservalue = userVector.get(key);
+        uservalue = uservalue == null ? 0 : uservalue;
+        numerator += uservalue * value;
+        denominator += Math.pow(value, 2);
+      }
+      Double newdenominator = 0.0;
+      for (Double uservalue : userVector.values()) {
+        newdenominator += uservalue * uservalue;
+      }
+      denominator = Math.sqrt(newdenominator * denominator);
+      BasicResult result = Results.create(item, numerator / denominator);
+      results.add(result);
     }
 
     return Results.newResultMap(results);
   }
 
-  public static double cosineSimilarity(double[] vectorA, double[] vectorB) {
+  public static double cosineSimilarity(Double[] vectorA, Double[] vectorB) {
     double dotProduct = 0.0;
     double normA = 0.0;
     double normB = 0.0;
@@ -86,6 +113,9 @@ public class TFIDFItemScorer extends AbstractItemScorer {
       dotProduct += vectorA[i] * vectorB[i];
       normA += Math.pow(vectorA[i], 2);
       normB += Math.pow(vectorB[i], 2);
+    }
+    if (Math.sqrt(normA) * Math.sqrt(normB) == 0) {
+      return 9999999;
     }
     return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
   }
