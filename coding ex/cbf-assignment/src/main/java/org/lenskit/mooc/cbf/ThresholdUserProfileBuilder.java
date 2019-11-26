@@ -45,8 +45,7 @@ public class ThresholdUserProfileBuilder implements UserProfileBuilder {
           Double value = e.getValue();
 //          System.out.println("key : " + key + " value: " + value);
           if (profile.containsKey(key)) {
-            Double currentValue = profile.get(key);
-            value += currentValue;
+            value += profile.get(key);
           }
           profile.put(key, value);
         }
