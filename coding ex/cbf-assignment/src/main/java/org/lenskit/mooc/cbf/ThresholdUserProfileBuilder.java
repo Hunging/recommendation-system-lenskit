@@ -12,36 +12,48 @@ import java.util.Map;
  * Build a user profile from all positive ratings.
  */
 public class ThresholdUserProfileBuilder implements UserProfileBuilder {
-    /**
-     * The lowest rating that will be considered in the user's profile.
-     */
-    private static final double RATING_THRESHOLD = 3.5;
 
-    /**
-     * The tag model, to get item tag vectors.
-     */
-    private final TFIDFModel model;
+  /**
+   * The lowest rating that will be considered in the user's profile.
+   */
+  private static final double RATING_THRESHOLD = 3.5;
 
-    @Inject
-    public ThresholdUserProfileBuilder(TFIDFModel m) {
-        model = m;
-    }
+  /**
+   * The tag model, to get item tag vectors.
+   */
+  private final TFIDFModel model;
 
-    @Override
-    public Map<String, Double> makeUserProfile(@Nonnull List<Rating> ratings) {
-        // Create a new vector over tags to accumulate the user profile
-        Map<String,Double> profile = new HashMap<>();
+  @Inject
+  public ThresholdUserProfileBuilder(TFIDFModel m) {
+    model = m;
+  }
 
-        // Iterate over the user's ratings to build their profile
-        for (Rating r: ratings) {
-            if (r.getValue() >= RATING_THRESHOLD) {
+  @Override
+  public Map<String, Double> makeUserProfile(@Nonnull List<Rating> ratings) {
+    // Create a new vector over tags to accumulate the user profile
+    Map<String, Double> profile = new HashMap<>();
 
-                // TODO Get this item's vector and add it to the user's profile
-                
-            }
+    // Iterate over the user's ratings to build their profile
+    for (Rating r : ratings) {
+      if (r.getValue() >= RATING_THRESHOLD) {
+        long userId = r.getUserId();
+        long itemId = r.getItemId();
+        // TODO Get this item's vector and add it to the user's profile
+        Map<String, Double> itemVector = model.getItemVector(itemId);
+        for (Map.Entry<String, Double> e : itemVector.entrySet()) {
+          String key = e.getKey();
+          Double value = e.getValue();
+//          System.out.println("key : " + key + " value: " + value);
+          if (profile.containsKey(key)) {
+            Double currentValue = profile.get(key);
+            value += currentValue;
+          }
+          profile.put(key, value);
         }
-
-        // The profile is accumulated, return it.
-        return profile;
+      }
     }
+
+    // The profile is accumulated, return it.
+    return profile;
+  }
 }
