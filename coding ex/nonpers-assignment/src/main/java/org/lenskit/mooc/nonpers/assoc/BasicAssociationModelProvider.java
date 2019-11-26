@@ -76,10 +76,8 @@ public class BasicAssociationModelProvider implements Provider<AssociationModel>
         double itemScore = 0;
         LongSortedSet yUsers = yEntry.getValue();
         Set<Long> a = new HashSet<>(yUsers);
-        a.retainAll(xUsers);
-        System.out.println(a.size());
-        System.out.println(xUsers.size());
-        itemScore = a.size() / xUsers.size();
+        int intersectSize = LongUtils.intersectSize(yUsers, xUsers);
+        itemScore = intersectSize *1.0 /  xUsers.size();
         itemScores.put(yId, itemScore);
       }
 

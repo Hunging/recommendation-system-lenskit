@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -73,12 +76,15 @@ public class AssociationItemBasedItemRecommender extends AbstractItemBasedItemRe
     int count = 0;
 
     for (Long candidate : candidates) {
-      if (count < n) {
-        Result result = Results.create(refItem, model.getItemAssociation(refItem, candidate));
+//      if (count < n) {
+//        Collections.sort(results);
+        Result result = Results.create(candidate, model.getItemAssociation(refItem, candidate));
         results.add(result);
         count++;
-      }
+//      }
     }
+    results = results.subList(0, n);
+
 
     return Results.newResultList(results);
   }
