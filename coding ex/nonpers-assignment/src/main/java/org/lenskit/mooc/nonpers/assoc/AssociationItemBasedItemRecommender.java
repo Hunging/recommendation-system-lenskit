@@ -78,15 +78,16 @@ public class AssociationItemBasedItemRecommender extends AbstractItemBasedItemRe
     for (Long candidate : candidates) {
 //      if (count < n) {
 //        Collections.sort(results);
-        Result result = Results.create(candidate, model.getItemAssociation(refItem, candidate));
-        results.add(result);
-        count++;
+      Result result = Results.create(candidate, model.getItemAssociation(refItem, candidate));
+      results.add(result);
+      count++;
 //      }
     }
     Collections.sort(results, Results.scoreOrder());
     Collections.reverse(results);
-    results = results.subList(0, n);
-
+    if (n > 0) {
+      results = results.subList(0, n);
+    }
 
     return Results.newResultList(results);
   }
