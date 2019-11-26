@@ -98,10 +98,11 @@ public class TFIDFItemScorer extends AbstractItemScorer {
         newdenominator += uservalue * uservalue;
       }
       denominator = Math.sqrt(newdenominator * denominator);
-      BasicResult result = Results.create(item, numerator / denominator);
-      results.add(result);
+      if (denominator != 0) {
+        BasicResult result = Results.create(item, numerator / denominator);
+        results.add(result);
+      }  
     }
-
     return Results.newResultMap(results);
   }
 
