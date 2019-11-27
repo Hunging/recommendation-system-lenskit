@@ -68,16 +68,16 @@ public class TFIDFModelProvider implements Provider<TFIDFModel> {
         Double value = 1.0;
         if (!work.containsKey(tag)) {
           work.put(tag, 1.0);
+          if (!docFreq.containsKey(tag)) {
+            docFreq.put(tag, 1.0);
+          } else {
+            docFreq.put(tag, docFreq.get(tag) + 1);
+          }
         } else {
           work.put(tag, work.get(tag) + 1);
         }
 
         // TODO Also count it in the document frequencey vector when needed
-        if (!docFreq.containsKey(tag)) {
-          docFreq.put(tag, 1.0);
-        } else {
-          docFreq.put(tag, docFreq.get(tag) + 1);
-        }
       }
 
       itemVectors.put(item, work);
